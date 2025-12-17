@@ -21,6 +21,7 @@ async def item_autocomplete(
         app_commands.Choice(name=item, value=item)
         for item in items.keys()
         if current in item.lower()
+    ]
   
 class MyClient(discord.Client):
     def __init__(self):
