@@ -2,6 +2,8 @@ import discord
 from discord import app_commands
 import json
 import os
+import dotenv
+dotenv.load_dotenv()
 
 TOKEN = os.getenv("TOKEN")
 
@@ -41,4 +43,7 @@ async def value(interaction: discord.Interaction, item: str):
             ephemeral=True
         )
 
-client.run(TOKEN)
+if TOKEN:
+    client.run(TOKEN)
+else:
+    print("Token not defined")
