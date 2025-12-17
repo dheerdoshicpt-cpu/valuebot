@@ -10,7 +10,18 @@ TOKEN = os.getenv("TOKEN")
 def load_items():
     with open("items.json", "r") as f:
         return json.load(f)
+async def item_autocomplete(
+    interaction: discord.Interaction,
+    current: str,
+):
+    items = load_items()
+    current = current.lower()
 
+    return [
+        app_commands.Choice(name=item, value=item)
+        for item in items.keys()
+        if current in item.lower()
+    
 class MyClient(discord.Client):
     def __init__(self):
         intents = discord.Intents.default()
