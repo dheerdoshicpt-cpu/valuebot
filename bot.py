@@ -21,7 +21,7 @@ async def item_autocomplete(
         app_commands.Choice(name=item, value=item)
         for item in items.keys()
         if current in item.lower()
-    
+  
 class MyClient(discord.Client):
     def __init__(self):
         intents = discord.Intents.default()
@@ -36,10 +36,7 @@ client = MyClient()
 
 @client.tree.command(name="value", description="Get the value of an item")
 @app_commands.describe(item="Item name (example: cursed volc)")
-async def value(interaction: discord.Interaction, item: str):
-    items = load_items()
-    item = item.lower()
-
+@app_commands.autocomplete(item=item_autocomplete)
     if item in items:
         data = items[item]
         await interaction.response.send_message(
