@@ -42,6 +42,29 @@ class Database:
         return items
         
     
-    
+    def __init__(self) -> None:
+        self.items = []
+
+        # Load data into items
+        for file in os.listdir("./data"):
+            if file.endswith(".yml"):
+                self.items.extend(
+                    self._read_file(file)
+                )
+
+    def get_item(self, item_name: str):
+        """
+        This is a HORRIFICALLY inefficent way of searching but.... its only a small database so... we dont care :D
+
+        In all fairness i will probably revisit this when im not tired and implement a nicer system
+        """
+        
+        # Search for our precious item
+        for item in self.items:
+            if item.name.lower() == item_name.lower():
+                return item
+        
+        # If no items foundd
+        return None
 
 
