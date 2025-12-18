@@ -39,7 +39,10 @@ client = MyClient()
 @client.tree.command(name="value", description="Get the value of an item")
 @app_commands.describe(item="Item name (example: cursed volc)")
 @app_commands.autocomplete(item=item_autocomplete)
-    if item in items:
+async def value_command(interaction: discord.Interaction):
+    items = load_items()
+    
+    for item in items:
         data = items[item]
         await interaction.response.send_message(
             f"**{item.title()}**\n"
