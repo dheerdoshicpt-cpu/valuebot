@@ -1,11 +1,15 @@
+import discord
+from discord import app_commands
+import json
+import os
+import dotenv
+
+# DO NOT REMOVE
+dotenv.load_dotenv()
+
 def load_items():
     with open("items.json", "r") as f:
         return json.load(f)
-async def item_autocomplete(
-    interaction: discord.Interaction,
-    current: str,
-):
-    items = load_items()
 
 async def item_autocomplete(interaction: discord.Interaction,current: str):
     items = load_items().keys()
