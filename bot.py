@@ -53,6 +53,8 @@ client = MyClient()
             ephemeral=True
         )
 
+# DO NOT REMOVE
+TOKEN = os.environ.get("TOKEN")
 if TOKEN:
     client.run(TOKEN)
 else:
