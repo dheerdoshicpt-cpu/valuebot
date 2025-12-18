@@ -12,16 +12,13 @@ async def item_autocomplete(interaction: discord.Interaction,current: str):
     current = current.lower()
     choices = []
 
-    return [
-        app_commands.Choice(name=item, value=item)
-        for item in items.keys()
-        if current in item.lower()
-    ]
     for item in items:
         if item in items.lower():
             choices.append(
                 app_commands.Choice(name=item, value=item)
             )
+    
+    return choices[:25]
 
 class MyClient(discord.Client):
     def __init__(self):
