@@ -17,7 +17,7 @@ async def item_autocomplete(interaction: discord.Interaction,current: str):
     choices = []
 
     for item in items:
-        if item in items.lower():
+        if current.lower() in item.lower():
             choices.append(
                 app_commands.Choice(name=item, value=item)
             )
