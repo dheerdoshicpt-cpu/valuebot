@@ -57,7 +57,7 @@ async def value_command(interaction: discord.Interaction):
         )
 
 # DO NOT REMOVE
-TOKEN = os.environ.get("TOKEN")
+TOKEN = os.getenv("TOKEN")
 if TOKEN:
     client.run(TOKEN)
 else:
