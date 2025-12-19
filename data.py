@@ -11,7 +11,7 @@ class Item(pydantic.BaseModel):
     demand: str
     overpay: str
 
-
+# TODO: make this a singleton and add caching
 class Database:
     """
     This is a class for all things Data!
@@ -23,7 +23,7 @@ class Database:
         - FileNotFound Error when there is no item data
         - Validation Error when the data is in an unexpected format (fails to convert)
         """
-        items = [] # Declare a temporary spot to hold the item data
+        items: list[Item] = [] # Declare a temporary spot to hold the item data
 
         # Read file_path
         with open(file_path, "r") as f:
@@ -52,7 +52,7 @@ class Database:
                     self._read_file(file)
                 )
 
-    def get_item(self, item_name: str):
+    def get_item(self, item_name: str) -> Item | None:
         """
         This is a HORRIFICALLY inefficent way of searching but.... its only a small database so... we dont care :D
 
