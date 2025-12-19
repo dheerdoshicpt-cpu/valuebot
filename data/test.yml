@@ -1,4 +1,4 @@
 Test: 
-  Value: "High"
-  Demand: "Good"
-  Overpay: "Nice"
+  value: "High"
+  demand: "Good"
+  overpay: "Nice"
