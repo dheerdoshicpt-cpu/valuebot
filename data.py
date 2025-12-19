@@ -49,7 +49,7 @@ class Database:
         for file in os.listdir("./data"):
             if file.endswith(".yml"):
                 self.items.extend(
-                    self._read_file(file)
+                    self._read_file("./data/" + file)
                 )
 
     def get_item(self, item_name: str) -> Item | None:
