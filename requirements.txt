@@ -1,5 +1,3 @@
 discord
-dotenv
-discord
 python-dotenv
 PyYAML
