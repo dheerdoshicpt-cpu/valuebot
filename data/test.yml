@@ -2,7 +2,8 @@ Test:
   value: "High"
   demand: "Good"
   overpay: "Nice"
-Cursed volc
+
+Cursed volc:
   value: "160k-180k"
   demand: "high"
   overpay: "high*
