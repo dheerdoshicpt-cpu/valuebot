@@ -1,6 +1,10 @@
+
+
 import os
 import yaml
 import pydantic
+from typing import Dict, List
+
 
 class Item(pydantic.BaseModel):
     """
@@ -11,60 +15,77 @@ class Item(pydantic.BaseModel):
     demand: str
     overpay: str
 
-# TODO: make this a singleton and add caching
+
 class Database:
     """
     This is a class for all things Data!
+    Singleton + caching
     """
-    
-    def _read_file(self, file_path):
-        """
-        Returns the Item objects with the given file_path, Raises:
-        - FileNotFound Error when there is no item data
-        - Validation Error when the data is in an unexpected format (fails to convert)
-        """
-        items: list[Item] = [] # Declare a temporary spot to hold the item data
 
-        # Read file_path
+    _instance = None
+    _file_cache: Dict[str, List[Item]] = {}
+
+    def __new__(cls):
+        if cls._instance is None:
+            cls._instance = super(Database, cls).__new__(cls)
+        return cls._instance
+
+    def _read_file(self, file_path: str) -> List[Item]:
+        """
+        Returns the Item objects with the given file_path
+        Uses caching to avoid rereading files
+        """
+
+        # ✅ Return cached data if present
+        if file_path in self._file_cache:
+            return self._file_cache[file_path]
+
+        if not os.path.exists(file_path):
+            raise FileNotFoundError(f"{file_path} does not exist")
+
+        items: List[Item] = []
+
         with open(file_path, "r") as f:
-            file_data: dict = yaml.safe_load(f)
-            
-            # Convert the items
+            file_data: dict = yaml.safe_load(f) or {}
+
             for key, value in file_data.items():
-                # Convert raw data into a format Pydantic understands
                 reformatted_data = {"name": key}
                 reformatted_data.update(value)
 
-                # Unpack the dictonary into a pydantic model and add it to items
                 items.append(Item(**reformatted_data))
 
-        # Return a the item data 
+        # ✅ Cache result
+        self._file_cache[file_path] = items
         return items
-        
-    
-    def __init__(self) -> None:
-        self.items = []
 
-        # Load data into items
+    def __init__(self) -> None:
+        # Prevent re-initialization (important for singleton)
+        if hasattr(self, "_initialized"):
+            return
+
+        self.items: List[Item] = []
+
         for file in os.listdir("./data"):
-            if file.endswith(".yml"):
+            if file.endswith((".yml", ".yaml")):
                 self.items.extend(
-                    self._read_file("./data/" + file)
+                    self._read_file(os.path.join("./data", file))
                 )
+
+        self._initialized = True
 
     def get_item(self, item_name: str) -> Item | None:
         """
-        This is a HORRIFICALLY inefficent way of searching but.... its only a small database so... we dont care :D
-
-        In all fairness i will probably revisit this when im not tired and implement a nicer system
+        Inefficient linear search, acceptable for small datasets
         """
-        
-        # Search for our precious item
+
         for item in self.items:
             if item.name.lower() == item_name.lower():
                 return item
-        
-        # If no items foundd
+
         return None
 
-
+    def clear_cache(self):
+        """
+        Clears cached files (useful for dev / reloads)
+        """
+        self._file_cache.clear()
